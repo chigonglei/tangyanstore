@@ -15,7 +15,7 @@ from fastapi.routing import APIRoute
 VALID_API_KEYS = {
     "12345": "49.47.144.33",   # PC
     "123456": "135.148.103.16",   # LOcal Host
-    "akF93bHnV7zRqpQ2eJxwT6LuYcM1NdgK": "174.138.120.81"  # lskyla
+    "rE3uK9tQXfW7L2nCz0vMdY8sGpA5JhZB": "15.206.215.172"  # lskyla
 }
 
 # ✅ Setup FastAPI
@@ -74,7 +74,7 @@ def root():
             description = safe_description(route.endpoint)
 
             # --- Build example URL ---
-            base_url = "https://skyla.vercel.app"
+            base_url = "https://tangyanstore.vercel.app"
             params = []
 
             # Add params based on function signature

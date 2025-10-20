@@ -13,7 +13,7 @@ from fastapi.routing import APIRoute
 
 # ✅ Allowed IPs and API keys
 VALID_API_KEYS = {
-    "12345": "49.47.144.33",   # PC
+    "12345": "49.47.144.24",   # PC
     "123456": "135.148.103.16",   # LOcal Host
     "rE3uK9tQXfW7L2nCz0vMdY8sGpA5JhZB": "15.206.215.172"  # lskyla
 }

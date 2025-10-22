@@ -465,36 +465,54 @@ def check_mlbb(request: Request, id: str, zone: str, _: str = Depends(verify_api
 @limiter.limit("100/day")
 def check_mlbb_indo(request: Request, id: str, zone: str, _: str = Depends(verify_api_key)):
     """
-    Check Mobile Legends Bang Bang (Indonesia) ID.
+    Check Mobile Legends Bang Bang (Indonesia) ID only.
+    Uses gameidcheckerenglish.vercel.app endpoint.
+    Returns simplified JSON format.
     """
 
-    url = f"https://cek-id-game.vercel.app/api/game/mobile-legends-bang-bang-vc?id={id}&zone={zone}"
+    url = f"https://gameidcheckerenglish.vercel.app/api/game/cek-region-mlbb-m?id={id}&zone={zone}"
 
     try:
         response = requests.get(url, timeout=10)
+        response.raise_for_status()
         result = response.json()
 
         if result.get("status") is True and "data" in result:
-            return {
-                "code": 200,
-                "status": True,
-                "message": result.get("message", "ID Successfully Found"),
-                "data": {
-                    "username": result["data"].get("username"),
-                    "user_id": result["data"].get("user_id"),
-                    "zone": result["data"].get("zone")
+            data = result["data"]
+            region = str(data.get("region", "")).strip().upper()
+
+            # ✅ Only return if region is Indonesian
+            if region in ["ID", "INDONESIA"]:
+                return {
+                    "code": 200,
+                    "status": True,
+                    "message": "",
+                    "data": {
+                        "username": data.get("username"),
+                        "user_id": str(data.get("user_id") or id),
+                        "zone": str(data.get("zone") or zone)
+                    }
                 }
+
+            # ❌ Non-Indonesian accounts
+            return {
+                "code": 403,
+                "status": False,
+                "message": f"Account region '{region}' is not Indonesia",
+                "data": {}
             }
 
     except Exception:
         pass
 
+    # ❌ Fallback for failed API or invalid response
     return {
         "code": 404,
         "status": False,
         "message": "Wrong ID or MLBB Indo API unavailable",
         "data": {}
     }
+
 
 # ------------------------------
 # Mobile legends adventure (Custom API)
